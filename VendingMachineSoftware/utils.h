@@ -13,9 +13,10 @@ using namespace std;
 namespace vmsoftware
 {
 	Mat crop_rotated_rect(Mat mat, RotatedRect rot_rect);
+	Mat draw_rotated_rect(Mat mat, RotatedRect rot_rect, Scalar color= Scalar());
 
 	template<typename T>
-		requires std::integral<T>
+		requires std::integral<T> || std::floating_point<T>
 	vector<float> linspace(T start, T stop, int count)
 	{
 		if (count < 2)
