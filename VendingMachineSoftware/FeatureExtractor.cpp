@@ -12,6 +12,7 @@ Mat vmsoftware::FeatureExtractor::crop_object(Mat mask, vector<Point> contour) {
 	approxPolyDP(contour, contour_poly, 10, true);*/
 	//Rect bound_rect = boundingRect(contour_poly);
 	RotatedRect min_rect = minAreaRect(contour);
+	cout << min_rect.angle <<endl;
 	Mat drawing = vmsoftware::draw_rotated_rect(mask, min_rect);
 	cv::imshow("Min rect", drawing);
 
@@ -75,6 +76,7 @@ float vmsoftware::FeatureExtractor::extract(Mat mask, vector<Point> object_conto
 	Mat cropped_mask = this->crop_object(mask, object_contour);
 	cv::imshow("Cropped mask", cropped_mask);
 	Mat indeted = this->make_indents(cropped_mask);
+	cv::imshow("Indented mask", indeted);
 	vector<Mat> slices = slice(indeted, this->slice_axis, this->slices_count);
 	float feature = this->calculate_features(slices);
 	return feature;

@@ -107,6 +107,8 @@
       <AdditionalIncludeDirectories>C:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessToFile>false</PreprocessToFile>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
+      <ForcedIncludeFiles>validate.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +138,6 @@
     <ClCompile Include="FeatureExtractor.cpp" />
     <ClCompile Include="IFeatureExtractor.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="parameters_config.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClInclude Include="IFeatureExtractor.h" />
     <ClInclude Include="parameters_config.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="validate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

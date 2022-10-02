@@ -19,6 +19,9 @@ Classifier::Classifier(IFeatureExtractor* feature_extractor, float thresh)
 BottleType Classifier::classify(Mat mask, vector<Point> object_contour)
 {
 	float feature = this->feature_extractor->extract(mask, object_contour);
+#ifdef VALIDATE
+	cout << "Значение признака - " << feature << endl;
+#endif // VALIDATE
 	BottleType bottleType = feature > this->thresh ? BottleType::Bottle : BottleType::Can;
 	return bottleType;
 }
