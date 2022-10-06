@@ -14,7 +14,7 @@ using namespace cv;
 
 void classify() {
 	cv::Mat mask = cv::imread(R"(C:\Users\zgstv\OneDrive\Документы\CSF\programming\programs\Mag Project\VendingMachineSoftware\Mask Bottle.png)");
-	if (!mask.data)
+	if (mask.empty())
 		throw exception("Изображение маски не прочитано.");
 	namedWindow("Mask", WINDOW_AUTOSIZE);
 	cv::imshow("Mask", mask);
@@ -24,7 +24,8 @@ void classify() {
 	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 	cv::findContours(mask, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-
+	if (contours.empty())
+		throw exception("Вектор контуров пуст.");
 	vmsoftware::IFeatureExtractor* feature_extractor = new vmsoftware::FeatureExtractor(SLICES_COUNT, SLICE_AXIS, REL_INDENT_X);
 	vmsoftware::Classifier* classifier = new vmsoftware::Classifier(feature_extractor, BOTTLE_CLASS_THRESH);
 	vmsoftware::BottleType bottle_type = classifier->classify(mask, contours.front());

@@ -1,4 +1,5 @@
 #include "FeatureExtractor.h"
+#include <cassert>
 
 void vmsoftware::FeatureExtractor::set_rel_indent(Axis axis, float value) {
 	if (value < 0 || value >= 1)
@@ -12,10 +13,11 @@ Mat vmsoftware::FeatureExtractor::crop_object(Mat mask, vector<Point> contour) {
 	approxPolyDP(contour, contour_poly, 10, true);*/
 	//Rect bound_rect = boundingRect(contour_poly);
 	RotatedRect min_rect = minAreaRect(contour);
-	cout << min_rect.angle <<endl;
+#ifdef VALIDATE
+	cout << min_rect.angle << endl;
 	Mat drawing = vmsoftware::draw_rotated_rect(mask, min_rect);
 	cv::imshow("Min rect", drawing);
-
+#endif // VALIDATE
 	return vmsoftware::crop_rotated_rect(mask, min_rect);
 }
 
@@ -72,11 +74,14 @@ vmsoftware::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis
 }
 
 float vmsoftware::FeatureExtractor::extract(Mat mask, vector<Point> object_contour) {
+	assert(!mask.empty() && "Input mask is empty.");
 	mask = mask.clone();
 	Mat cropped_mask = this->crop_object(mask, object_contour);
-	cv::imshow("Cropped mask", cropped_mask);
 	Mat indeted = this->make_indents(cropped_mask);
+#ifdef VALIDATE
+	cv::imshow("Cropped mask", cropped_mask);
 	cv::imshow("Indented mask", indeted);
+#endif // VALIDATE
 	vector<Mat> slices = slice(indeted, this->slice_axis, this->slices_count);
 	float feature = this->calculate_features(slices);
 	return feature;
