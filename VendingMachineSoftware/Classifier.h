@@ -6,17 +6,16 @@
 #include "FeatureExtractor.h"
 #include "IFeatureExtractor.h"
 
-using namespace vmsoftware;
-using namespace std;
-using namespace cv;
 
-namespace vmsoftware {
+namespace classification {
+	using cv::Mat, cv::Point;
+	using std::vector;
+	using features::IFeatureExtractor;
 	enum BottleType
 	{
 		Can,
 		Bottle
 	};
-
 
 	class Classifier
 	{

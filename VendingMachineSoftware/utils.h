@@ -6,23 +6,20 @@
 #include <iostream>
 #include <concepts>
 
-
-
-using namespace cv;
-using namespace std;
-
-
-namespace vmsoftware
+namespace utils
 {
-	Mat crop_rotated_rect(Mat mat, RotatedRect rot_rect);
-	Mat draw_rotated_rect(Mat mat, RotatedRect rot_rect, Scalar color= Scalar());
+	using cv::Mat, cv::Point,cv::Scalar,cv::RotatedRect;
+	using std::vector;
+
+	Mat crop_rotated_rect(Mat m, RotatedRect rot_rect);
+	Mat draw_rotated_rect(Mat m, RotatedRect rot_rect, Scalar color= Scalar());
 
 	template<typename T>
 		requires std::integral<T> || std::floating_point<T>
 	vector<float> linspace(T start, T stop, int count)
 	{
 		if (count < 2)
-			throw invalid_argument("Параметр count<2");
+			throw std::invalid_argument("Параметр count<2");
 		float diff = static_cast<float>(stop - start);
 		float step = diff / (count - 1);
 

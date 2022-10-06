@@ -1,7 +1,6 @@
 #include "utils.h"
 
-
-Mat vmsoftware::crop_rotated_rect(Mat m, RotatedRect rot_rect)
+cv::Mat utils::crop_rotated_rect(Mat m, RotatedRect rot_rect)
 {
 	/*Point2f pts[4];
 	rot_rect.points(pts);
@@ -25,17 +24,17 @@ Mat vmsoftware::crop_rotated_rect(Mat m, RotatedRect rot_rect)
 	cv::imshow("Rotated", rotated_m);
 #endif // VALIDATE
 	Mat cropped_m;
-	getRectSubPix(rotated_m, Size(rot_width,rot_height), rot_rect.center, cropped_m);
+	getRectSubPix(rotated_m, cv::Size(rot_width,rot_height), rot_rect.center, cropped_m);
 	return cropped_m;
 }
 
-Mat vmsoftware::draw_rotated_rect(Mat mat, RotatedRect rot_rect, Scalar color)
+cv::Mat utils::draw_rotated_rect(Mat mat, RotatedRect rot_rect, Scalar color)
 {
 	cv::RNG rng(12345);
 	if(color == Scalar::zeros())
 		color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
 	Mat drawing = mat.clone();
-	Point2f rect_points[4];
+	cv::Point2f rect_points[4];
 	rot_rect.points(rect_points);
 	for (int j = 0; j < 4; j++)
 	{

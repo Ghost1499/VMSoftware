@@ -1,27 +1,28 @@
 #include "FeatureExtractor.h"
 #include <cassert>
 
-void vmsoftware::FeatureExtractor::set_rel_indent(Axis axis, float value) {
+void features::FeatureExtractor::set_rel_indent(Axis axis, float value) {
 	if (value < 0 || value >= 1)
-		throw invalid_argument("Недопустимое значение параметра \"value\"");
+		throw std::invalid_argument("Недопустимое значение параметра \"value\"");
 	this->rel_indents[axis] = value;
 }
 
-Mat vmsoftware::FeatureExtractor::crop_object(Mat mask, vector<Point> contour) {
-
+cv::Mat features::FeatureExtractor::crop_object(Mat mask, vector<Point> contour) {
+	
 	/*vector<Point> contour_poly;
 	approxPolyDP(contour, contour_poly, 10, true);*/
 	//Rect bound_rect = boundingRect(contour_poly);
-	RotatedRect min_rect = minAreaRect(contour);
+	cv::RotatedRect min_rect = minAreaRect(contour);
 #ifdef VALIDATE
-	cout << min_rect.angle << endl;
-	Mat drawing = vmsoftware::draw_rotated_rect(mask, min_rect);
+	std::cout << min_rect.angle << std::endl;
+	Mat drawing = utils::draw_rotated_rect(mask, min_rect);
 	cv::imshow("Min rect", drawing);
 #endif // VALIDATE
-	return vmsoftware::crop_rotated_rect(mask, min_rect);
+	return utils::crop_rotated_rect(mask, min_rect);
 }
 
-Mat vmsoftware::FeatureExtractor::make_indents(Mat mask) {
+cv::Mat features::FeatureExtractor::make_indents(Mat mask) {
+	using cv::Range;
 	vector<Range> ranges{ Range::all(),Range::all() };
 	for (int axis = 0; axis < ranges.size(); axis++)
 	{
@@ -34,11 +35,12 @@ Mat vmsoftware::FeatureExtractor::make_indents(Mat mask) {
 	return mask(ranges);
 }
 
-vector<Mat> vmsoftware::FeatureExtractor::slice(Mat mask, Axis axis, int slices_count) {
+std::vector<cv::Mat> features::FeatureExtractor::slice(Mat mask, Axis axis, int slices_count) {
+	using cv::Range;
 	vector<Mat> slices(slices_count);
 	int length = mask.size[axis];
 	auto round2int = [](float elem) { return static_cast<int>(roundf(elem)); };
-	vector<float> slices_steps = vmsoftware::linspace(0, length - 1, slices_count + 1);
+	vector<float> slices_steps = utils::linspace(0, length - 1, slices_count + 1);
 	vector<int> slices_steps_rounded(slices_steps.size());
 	std::transform(slices_steps.begin(), slices_steps.end(), slices_steps_rounded.begin(), round2int);
 
@@ -51,29 +53,29 @@ vector<Mat> vmsoftware::FeatureExtractor::slice(Mat mask, Axis axis, int slices_
 	return slices;
 }
 
-float vmsoftware::FeatureExtractor::calculate_features(vector<Mat> slices) {
+float features::FeatureExtractor::calculate_features(vector<Mat> slices) {
 	float first_slice_ratio = countNonZero(slices.front()) / float(slices[0].total());
 	float last_slice_ratio = countNonZero(slices.back()) / float(slices[0].total());
 	float ratio = cv::abs(first_slice_ratio - last_slice_ratio);
 	return ratio;
 }
 
-void vmsoftware::FeatureExtractor::set_rel_indent_x(float value) {
-	this->set_rel_indent(vmsoftware::Axis::Horizontal, value);
+void features::FeatureExtractor::set_rel_indent_x(float value) {
+	this->set_rel_indent(Axis::Horizontal, value);
 }
 
-void vmsoftware::FeatureExtractor::set_rel_indent_y(float value) {
-	this->set_rel_indent(vmsoftware::Axis::Vertical, value);
+void features::FeatureExtractor::set_rel_indent_y(float value) {
+	this->set_rel_indent(Axis::Vertical, value);
 }
 
-vmsoftware::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis, float rel_indent_x, float rel_indent_y) {
+features::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis, float rel_indent_x, float rel_indent_y) {
 	this->set_rel_indent_x(rel_indent_x);
 	this->set_rel_indent_y(rel_indent_y);
 	this->slices_count = slices_count;
 	this->slice_axis = slice_axis;
 }
 
-float vmsoftware::FeatureExtractor::extract(Mat mask, vector<Point> object_contour) {
+float features::FeatureExtractor::extract(Mat mask, vector<Point> object_contour) {
 	assert(!mask.empty() && "Input mask is empty.");
 	mask = mask.clone();
 	Mat cropped_mask = this->crop_object(mask, object_contour);

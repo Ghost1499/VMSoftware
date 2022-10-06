@@ -2,9 +2,9 @@
 #include <concepts>
 #include <opencv2/core.hpp>
 
-using cv::Mat,cv::Point;
-
-namespace vmsoftware {
+namespace features {
+	using cv::Mat,cv::Point;
+	using std::vector;
 	class IFeatureExtractor
 	{
 	public:

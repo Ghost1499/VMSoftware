@@ -9,10 +9,7 @@
 #include "IFeatureExtractor.h"
 #include "utils.h"
 
-using namespace std;
-using namespace cv;
-
-namespace vmsoftware {
+namespace features {
 	enum Axis
 	{
 		Vertical = 0,
