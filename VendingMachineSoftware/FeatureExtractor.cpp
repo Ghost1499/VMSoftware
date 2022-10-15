@@ -1,13 +1,16 @@
 #include "FeatureExtractor.h"
-#include <cassert>
+#include "VMSoftException.h"
+#include "SlicesCountException.h"
+#include "RelIndentException.h"
+
 
 void features::FeatureExtractor::set_rel_indent(Axis axis, float value) {
 	if (value < 0 || value >= 1)
-		throw std::invalid_argument("Недопустимое значение параметра \"value\"");
+		throw exceptions::RelIndentException(value, axis);
 	this->rel_indents[axis] = value;
 }
 
-cv::Mat features::FeatureExtractor::crop_object(Mat mask, vector<Point> contour) {
+cv::Mat features::FeatureExtractor::crop_object(Mat mask, const vector<Point>& contour) {
 	
 	/*vector<Point> contour_poly;
 	approxPolyDP(contour, contour_poly, 10, true);*/
@@ -23,12 +26,14 @@ cv::Mat features::FeatureExtractor::crop_object(Mat mask, vector<Point> contour)
 
 cv::Mat features::FeatureExtractor::make_indents(Mat mask) {
 	using cv::Range;
-	vector<Range> ranges{ Range::all(),Range::all() };
+	vector<Range> ranges(mask.dims);
 	for (int axis = 0; axis < ranges.size(); axis++)
 	{
 		//необязательная строчка, но лучше(?) для производительности
-		if (rel_indents[axis] == 0)
+		if (rel_indents[axis] == 0) {
+			ranges[axis] = Range::all();
 			continue;
+		}
 		int indent = static_cast<int>(roundf(mask.size[axis] * this->rel_indents[axis]));
 		ranges[axis] = Range(indent, mask.size[axis] - indent);
 	}
@@ -53,7 +58,7 @@ std::vector<cv::Mat> features::FeatureExtractor::slice(Mat mask, Axis axis, int 
 	return slices;
 }
 
-float features::FeatureExtractor::calculate_features(vector<Mat> slices) {
+float features::FeatureExtractor::calculate_features(const vector<Mat>& slices) {
 	float first_slice_ratio = countNonZero(slices.front()) / float(slices[0].total());
 	float last_slice_ratio = countNonZero(slices.back()) / float(slices[0].total());
 	float ratio = cv::abs(first_slice_ratio - last_slice_ratio);
@@ -68,15 +73,28 @@ void features::FeatureExtractor::set_rel_indent_y(float value) {
 	this->set_rel_indent(Axis::Vertical, value);
 }
 
+float features::FeatureExtractor::get_rel_indent_x() const
+{
+	return this->rel_indents[Axis::Horizontal];
+}
+
+float features::FeatureExtractor::get_rel_indent_y() const
+{
+	return this->rel_indents[Axis::Vertical];
+}
+
 features::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis, float rel_indent_x, float rel_indent_y) {
+	if (slices_count < 1)
+		throw exceptions::SlicesCountException("Параметр slices_count<1.",slices_count);
 	this->set_rel_indent_x(rel_indent_x);
 	this->set_rel_indent_y(rel_indent_y);
 	this->slices_count = slices_count;
 	this->slice_axis = slice_axis;
 }
 
-float features::FeatureExtractor::extract(Mat mask, vector<Point> object_contour) {
-	assert(!mask.empty() && "Input mask is empty.");
+float features::FeatureExtractor::extract(Mat mask, const vector<Point>& object_contour) {
+	assert(!mask.empty() && "Входная маска пустая.");
+	assert(!object_contour.empty() && "Входной контур пустой.");
 	mask = mask.clone();
 	Mat cropped_mask = this->crop_object(mask, object_contour);
 	Mat indeted = this->make_indents(cropped_mask);

@@ -138,6 +138,7 @@
     <ClCompile Include="FeatureExtractor.cpp" />
     <ClCompile Include="IFeatureExtractor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RelIndentException.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,8 +146,11 @@
     <ClInclude Include="FeatureExtractor.h" />
     <ClInclude Include="IFeatureExtractor.h" />
     <ClInclude Include="parameters_config.h" />
+    <ClInclude Include="RelIndentException.h" />
+    <ClInclude Include="SlicesCountException.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="validate.h" />
+    <ClInclude Include="VMSoftException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

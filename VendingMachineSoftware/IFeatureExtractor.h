@@ -8,7 +8,7 @@ namespace features {
 	class IFeatureExtractor
 	{
 	public:
-		virtual float extract(Mat mask, std::vector<Point> object_contour) = 0;
+		virtual float extract(Mat mask, const std::vector<Point>& object_contour) = 0;
 	};
 }
 

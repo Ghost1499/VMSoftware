@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="exceptions">
+      <UniqueIdentifier>{98c5cb5b-6911-4937-a92a-5983112edd29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="IFeatureExtractor.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="RelIndentException.cpp">
+      <Filter>exceptions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +55,15 @@
     </ClInclude>
     <ClInclude Include="validate.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="VMSoftException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="SlicesCountException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="RelIndentException.h">
+      <Filter>exceptions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

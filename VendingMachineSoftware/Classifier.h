@@ -5,12 +5,16 @@
 
 #include "FeatureExtractor.h"
 #include "IFeatureExtractor.h"
+#include "VMSoftException.h"
+#include "InvalidParameterException.h"
 
 
 namespace classification {
 	using cv::Mat, cv::Point;
 	using std::vector;
 	using features::IFeatureExtractor;
+	using exceptions::VMSoftException;
+
 	enum BottleType
 	{
 		Can,
@@ -27,7 +31,7 @@ namespace classification {
 		float get_thresh();
 		void set_thresh(float value);
 		Classifier(IFeatureExtractor *feature_extractor, float thresh);
-		BottleType classify(Mat mask, vector<Point> object_contour);
+		BottleType classify(const Mat mask,const vector<Point>& object_contour);
 	};
 
 	

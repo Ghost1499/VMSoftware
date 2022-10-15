@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/VendingMachineSoftware/InvalidParameterException.h
+/VendingMachineSoftware/ParameterOutOfRangeException.h
+/VendingMachineSoftware/ParameterOutOfRangeExceptionT.cpp
+/VendingMachineSoftware/ParameterOutOfRangeExceptionT.h
