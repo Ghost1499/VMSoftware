@@ -6,7 +6,6 @@
 #include "FeatureExtractor.h"
 #include "IFeatureExtractor.h"
 #include "VMSoftException.h"
-#include "InvalidParameterException.h"
 
 
 namespace classification {
