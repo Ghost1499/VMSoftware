@@ -8,11 +8,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-
 #include "IFeatureExtractor.h"
 #include "utils.h"
-
-
 
 namespace features {
 	

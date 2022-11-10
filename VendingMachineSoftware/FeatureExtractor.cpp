@@ -100,6 +100,7 @@ float features::FeatureExtractor::extract(Mat mask, const vector<Point>& object_
 	Mat indeted = this->make_indents(cropped_mask);
 #ifdef VALIDATE
 	cv::imshow("Cropped mask", cropped_mask);
+	cv::imwrite("Indented mask.jpg", indeted);
 	cv::imshow("Indented mask", indeted);
 #endif // VALIDATE
 	vector<Mat> slices = slice(indeted, this->slice_axis, this->slices_count);
