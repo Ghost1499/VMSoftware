@@ -10,18 +10,20 @@
 #include "FeatureExtractor.h"
 #include "Classifier.h"
 
-using std::cout, std::cin,std::endl, std::vector;
+using std::cout, std::cin,std::endl, std::vector, std::string;
 
-void classify() {
+classification::BottleType classify(string mask_path) {
 	using classification::Classifier, classification::IFeatureExtractor, classification::BottleType;
 	using features::FeatureExtractor;
 
-	cv::Mat mask = cv::imread(R"(C:\Users\zgstv\OneDrive\Документы\CSF\programming\programs\Mag Project\VendingMachineSoftware\Mask Bottle.png)");
+	cv::Mat mask = cv::imread(mask_path);
 	if (mask.empty())
 		throw std::exception("Изображение маски не прочитано.");
+#ifdef VALIDATE
 	cv::namedWindow("Mask", cv::WINDOW_AUTOSIZE);
+	//cv::moveWindow("Mask", 0, 45);
 	cv::imshow("Mask", mask);
-	cv::moveWindow("Mask", 0, 45);
+#endif // VALIDATE
 	cv::cvtColor(mask, mask, cv::COLOR_RGB2GRAY);
 
 	vector<vector<cv::Point>> contours;
@@ -32,11 +34,13 @@ void classify() {
 	IFeatureExtractor* feature_extractor = new FeatureExtractor(config::SLICES_COUNT, config::SLICE_AXIS, config::REL_INDENT_X);
 	Classifier* classifier = new Classifier(feature_extractor, config::BOTTLE_CLASS_THRESH);
 	BottleType bottle_type = classifier->classify(mask, contours.front());
+#ifdef VALIDATE
 	std::string btype = !bottle_type ? "Банка" : "Бутылка";
 	cout << btype << endl;
-
 	cv::waitKey(0);
 	cv::destroyAllWindows();
+#endif // VALIDATE
+	return bottle_type;
 }
 
 void test_rot_rect() {
@@ -56,8 +60,8 @@ void test_rot_rect() {
 int main()
 {
 	setlocale(LC_ALL, "");
-
-	classify();
+	string mask_path = R"(C:\Users\zgstv\OneDrive\Документы\CSF\programming\programs\Mag Project\VendingMachineSoftware\Mask bottle 2.png)";
+	classify(mask_path);
 	//test_rot_rect();
 	return 0;
 }
