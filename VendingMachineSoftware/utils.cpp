@@ -11,7 +11,7 @@ cv::Mat utils::crop_rotated_rect(Mat m, RotatedRect rot_rect)
 	float rot_angle = rot_rect.angle;
 	int rot_width = rot_rect.size.width;
 	int rot_height = rot_rect.size.height;
-	if (rot_rect.size.width < rot_rect.size.height) {
+	if (rot_width < rot_height) {
 		rot_angle = 90 + rot_angle;
 		int tmp = rot_width;
 		rot_width = rot_height;

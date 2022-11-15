@@ -18,11 +18,11 @@ classification::Classifier::Classifier(IFeatureExtractor* feature_extractor, flo
 	set_thresh(thresh);
 }
 
-classification::BottleType classification::Classifier::classify(const Mat mask,const vector<Point>& object_contour)
+classification::BottleType classification::Classifier::classify(const Mat mask)
 {
 	assert(!mask.empty() && "¬ходна€ маска пуста€.");
-	assert(!object_contour.empty() && "¬ходной контур пустой.");
-	float feature = this->feature_extractor->extract(mask, object_contour);
+	//assert(!object_contour.empty() && "¬ходной контур пустой.");
+	float feature = this->feature_extractor->extract(mask);
 #ifdef VALIDATE
 	std::cout << "«начение признака - " << feature << std::endl;
 #endif // VALIDATE
