@@ -30,7 +30,7 @@ namespace classification {
 		float get_thresh();
 		void set_thresh(float value);
 		Classifier(IFeatureExtractor *feature_extractor, float thresh);
-		BottleType classify(const Mat mask,const vector<Point>& object_contour);
+		BottleType classify(const Mat mask);
 	};
 
 	

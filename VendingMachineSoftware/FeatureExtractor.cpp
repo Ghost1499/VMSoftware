@@ -83,27 +83,72 @@ float features::FeatureExtractor::get_rel_indent_y() const
 	return this->rel_indents[Axis::Vertical];
 }
 
-features::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis, float rel_indent_x, float rel_indent_y) {
-	if (slices_count < 1)
-		throw exceptions::SlicesCountException("Параметр slices_count<1.",slices_count);
-	this->set_rel_indent_x(rel_indent_x);
-	this->set_rel_indent_y(rel_indent_y);
-	this->slices_count = slices_count;
-	this->slice_axis = slice_axis;
+void features::FeatureExtractor::set_image_orientation(Axis orientation)
+{
+	image_orientation = orientation;
 }
 
-float features::FeatureExtractor::extract(Mat mask, const vector<Point>& object_contour) {
+features::Axis features::FeatureExtractor::get_image_orientation() const
+{
+	return image_orientation;
+}
+
+features::FeatureExtractor::FeatureExtractor(int slices_count, Axis slice_axis,Axis image_orientation, float rel_indent_x, float rel_indent_y) {
+	if (slices_count < 1)
+		throw exceptions::SlicesCountException("Параметр slices_count<1.",slices_count);
+	this->slices_count = slices_count;
+	this->slice_axis = slice_axis;
+	set_image_orientation(image_orientation);
+	this->set_rel_indent_x(rel_indent_x);
+	this->set_rel_indent_y(rel_indent_y);
+}
+
+float features::FeatureExtractor::extract(Mat mask) {
 	assert(!mask.empty() && "Входная маска пустая.");
-	assert(!object_contour.empty() && "Входной контур пустой.");
+	//assert(!object_contour.empty() && "Входной контур пустой.");
 	mask = mask.clone();
-	Mat cropped_mask = this->crop_object(mask, object_contour);
+	Mat rotated = orient_image(mask, image_orientation);
+	vector<Point> object_contour = find_contours(rotated).front();
+	Mat cropped_mask = this->crop_object(rotated, object_contour);
+	cv::rotate(cropped_mask, cropped_mask, cv::ROTATE_180);
 	Mat indeted = this->make_indents(cropped_mask);
 #ifdef VALIDATE
+	cv::imshow("Match orient", rotated);
 	cv::imshow("Cropped mask", cropped_mask);
-	cv::imwrite("Indented mask.jpg", indeted);
 	cv::imshow("Indented mask", indeted);
 #endif // VALIDATE
 	vector<Mat> slices = slice(indeted, this->slice_axis, this->slices_count);
 	float feature = this->calculate_features(slices);
 	return feature;
+}
+
+features::Axis features::find_orientation(cv::Size size)
+{
+	return  size.aspectRatio() > 1 ? Axis::Horizontal : Axis::Vertical;
+}
+
+cv::Mat features::orient_image(Mat image, Axis dest_orient)
+{
+	Axis curr_orient = find_orientation(image.size());
+	if (curr_orient == dest_orient)
+		return image;
+	Mat rotated(image.cols, image.rows, image.type());
+	cv::RotateFlags rotate_flag;
+	if (curr_orient == Horizontal)
+		rotate_flag = cv::ROTATE_90_CLOCKWISE;
+	else
+		rotate_flag = cv::ROTATE_90_COUNTERCLOCKWISE;
+	cv::rotate(image, rotated, rotate_flag);
+	return rotated;
+}
+
+std::vector<std::vector<cv::Point>> features::find_contours(Mat mask)
+{
+	using std::vector;
+	vector<vector<cv::Point>> contours;
+	vector<cv::Vec4i> hierarchy;
+	cv::findContours(mask, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+	if (contours.empty())
+		throw exceptions::VMSoftException("Вектор контуров пуст.");
+	return contours;
 }
