@@ -3,8 +3,7 @@
 #include <opencv2/core.hpp>
 
 namespace features {
-	using cv::Mat,cv::Point;
-	using std::vector;
+	using cv::Mat;
 	class IFeatureExtractor
 	{
 	public:
