@@ -12,8 +12,8 @@
 #include "utils.h"
 
 namespace features {
-	
-
+	using cv::Point;
+	using std::vector;
 	enum Axis
 	{
 		Vertical = 0,

@@ -89,29 +89,15 @@ classification::BottleType classify(string mask_path) {
 	return bottle_type;
 }
 
-//void test_rot_rect() {
-//	using namespace cv;
-//	Mat test_image(200, 200, CV_8UC3, Scalar(0));
-//	RotatedRect rRect = RotatedRect(Point2f(100, 100), Size2f(100, 50), -10);
-//	Point2f vertices[4];
-//	rRect.points(vertices);
-//	for (int i = 0; i < 4; i++)
-//		line(test_image, vertices[i], vertices[(i + 1) % 4], Scalar(0, 255, 0), 2);
-//	Rect brect = rRect.boundingRect();
-//	rectangle(test_image, brect, Scalar(255, 0, 0), 2);
-//	imshow("rectangles", test_image);
-//	cout << rRect.angle << endl;
-//	waitKey(0);
-//}
 int main()
 {
 	setlocale(LC_ALL, "");
 
-	//string mask_path = R"(C:\Users\zgstv\JupyterLab Notebooks\Mag-Project\Barcode_detection\data\classification\cropped\PET\20220712_161111\Mask.png)";
-	//classify(mask_path);
+	string mask_path = R"(C:\Users\zgstv\JupyterLab Notebooks\Mag-Project\Barcode_detection\data\classification\cropped\PET\20220712_161111\Mask.png)";
+	classify(mask_path);
 
-	fs::path data_folder = LR"(C:\Users\zgstv\JupyterLab Notebooks\Mag-Project\Barcode_detection\data\classification\cropped)";
-	classify_all(data_folder,"../results");
+	//fs::path data_folder = LR"(C:\Users\zgstv\JupyterLab Notebooks\Mag-Project\Barcode_detection\data\classification\cropped)";
+	//classify_all(data_folder,"../results");
 
 	//cv::Mat mask = cv::imread(mask_path);
 	//cv::imshow("source", mask);
