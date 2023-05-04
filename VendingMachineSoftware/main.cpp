@@ -57,11 +57,20 @@ void test_rot_rect() {
 	cout << rRect.angle << endl;
 	waitKey(0);
 }
-int main()
+int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "");
-	string mask_path = R"(C:\Users\zgstv\OneDrive\Документы\CSF\programming\programs\Mag Project\VendingMachineSoftware\Mask bottle 2.png)";
-	classify(mask_path);
+	string mask_path = argv[1];
+	try
+	{
+		classify(mask_path);
+	}
+	catch (const std::exception& ex)
+	{
+		cout << ex.what();
+		return -1;
+	}
 	//test_rot_rect();
+	cv::waitKey(0);
 	return 0;
 }
